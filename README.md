@@ -18,7 +18,7 @@ Installation
 
     ```json
     "require": {
-        "cobyl/PpModuleMailer": "master"
+        "cobyl/PpModuleMailer": "dev-master"
     }
     ```
 
