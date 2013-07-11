@@ -50,25 +50,22 @@ enabled transactions.
 
 # How to use _PpModuleMailer_
 
-Adding mail to queue "registration" from controller:
+1. Adding mail to queue "registration" from controller:
 
     ```php
-    
     <?php    
     $mail = new \Zend\Mail\Message();
     $mail->addTo('to@domain.com');
     $mail->addFrom('from@domain.com');
     $mail->setSubject('Subject');
     $mail->setBody('Body');
-    
     $this->getServiceLocator()->get('PpModuleMailer')->add('registration',$mail);
     
     ```
 
-    or
+2. or
 
     ```php
-    
     <?php
     $this->getServiceLocator()
         ->get('PpModuleMailer')
@@ -76,10 +73,9 @@ Adding mail to queue "registration" from controller:
         
     ```
 
-Sending queue "registration" from console:
+3. Sending queue "registration" from console:
 
     ```bash
-    
     $ php public/index.php mailer process registration
     
     ```
