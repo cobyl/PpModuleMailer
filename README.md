@@ -1,8 +1,6 @@
 PpModuleMailer
 ==============
 
-Version 0.0.1 Created by Tomek Kobyliński
-
 Introduction
 ------------
 
@@ -47,26 +45,28 @@ Installation
 
 2. Add table to database.
 
-Please check sql/PpModuleMailer.mysql
-This module needs database with enabled transactions. 
+Please check sql/PpModuleMailer.mysql.sql. This module needs database with 
+enabled transactions. 
 
 # How to use _PpModuleMailer_
 
 Adding mail to queue "registration" from controller:
 
     ```php
+    <?php
     $mail = new \Zend\Mail\Message();
     $mail->addTo('to@domain.com');
     $mail->addFrom('from@domain.com');
     $mail->setSubject('Subject');
     $mail->setBody('Body');
-
+    
     $this->getServiceLocator()->get('PpModuleMailer')->add('registration',$mail);
     ```
 
     or
 
     ```php
+    <?php
     $this->getServiceLocator()
         ->get('PpModuleMailer')
         ->addMail('registration','to@d.com','Subject','Body','from@d.com');
