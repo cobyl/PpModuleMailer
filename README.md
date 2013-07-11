@@ -1,7 +1,6 @@
 PpModuleMailer
 ==============
 
-<<<<<<< HEAD
 Version 0.0.1 Created by Tomek Kobyliński
 
 Introduction
@@ -21,7 +20,7 @@ Installation
 
     ```json
     "require": {
-        "cobyl/PpModuleMailer": "dev-master"
+        "cobyl/PpModuleMailer": "master"
     }
     ```
 
@@ -87,4 +86,3 @@ For other ways check module.config.php
 That's it!
 =======
 PpModuleMailer is a simple Zend Framework 2 module that allows you to create mail queue in sql database.
->>>>>>> 612c812941a3d0ccc6bd85e96baaea4eb18fdfd4
