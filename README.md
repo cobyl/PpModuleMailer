@@ -53,7 +53,8 @@ enabled transactions.
 Adding mail to queue "registration" from controller:
 
     ```php
-    <?php
+    
+    <?php    
     $mail = new \Zend\Mail\Message();
     $mail->addTo('to@domain.com');
     $mail->addFrom('from@domain.com');
@@ -61,21 +62,26 @@ Adding mail to queue "registration" from controller:
     $mail->setBody('Body');
     
     $this->getServiceLocator()->get('PpModuleMailer')->add('registration',$mail);
+    
     ```
 
     or
 
     ```php
+    
     <?php
     $this->getServiceLocator()
         ->get('PpModuleMailer')
         ->addMail('registration','to@d.com','Subject','Body','from@d.com');
+        
     ```
 
 Sending queue "registration" from console:
 
     ```bash
+    
     $ php public/index.php mailer process registration
+    
     ```
 
 # Configuration
@@ -84,5 +90,5 @@ The default configuration is setup to use the system SMTP configuration.
 For other ways check module.config.php
 
 That's it!
-=======
-PpModuleMailer is a simple Zend Framework 2 module that allows you to create mail queue in sql database.
+==========
+
