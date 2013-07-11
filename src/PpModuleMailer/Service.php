@@ -57,7 +57,7 @@ class Service
             try {
                 $transport->send($mail->mail);
                 $success++;
-                file_put_contents('php://stdout', 'Mail sended to: '.$to()."\n",FILE_APPEND);
+                file_put_contents('php://stdout', 'Mail sent to: '.$to()."\n",FILE_APPEND);
             }
             catch (\Exception $e) {
                 $error++;
