@@ -4,6 +4,5 @@ create table mailer (
     queue_name char(16) not null,
     mail text not null,
     created timestamp default now() not null,    
-    status enum('waiting','processing','to-resending','sended','failed') not null,
-    `lock` char(40)
+    status enum('waiting','processing') not null
 );
