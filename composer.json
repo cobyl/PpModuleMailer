@@ -1,5 +1,5 @@
 {
-    "name": "cobyl/pp-module-mailer",
+    "name": "cobyl/PpModuleMailer",
     "description": "PpModuleMailer is a simple ZF2 module that allows you to create mail queue in database.",
     "type": "library",
     "keywords": [
