@@ -58,6 +58,13 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
                 )
         );
     }
+
+    /**
+     * @param \PpModuleMailer\Model\Mailer $mail
+     */
+    public function markAsSent(\PpModuleMailer\Model\Mailer $mail) {
+        $this->tableGateway->update(array("status"=>"sent"),array('id'=>$mail->id));
+    }
     
     /**
      * @param string $queue_name

@@ -8,12 +8,24 @@
 
 namespace PpModuleMailer;
 
+use \Zend\Mail\AddressList;
+use \Zend\Mail\Message;
+use \Zend\Mail\Transport;
+use \Zend\Mail\Transport\Smtp;
+use \Zend\Mail\Transport\SmtpOptions;
+
+use \PpModuleMailer\Model\MailerTable;
+
 class Service
-{    
+{
+    /**
+     * @var Model\MailerTable
+     */
     protected $table;
+
     protected $config;
     
-    public function __construct(\PpModuleMailer\Model\MailerTable $table, $config) {
+    public function __construct(MailerTable $table, $config) {
         $this->table = $table;
         $this->config = $config;
     }
@@ -38,26 +50,31 @@ class Service
  
     /**
      * @param string $queue_name
-     * @return type
      */
     public function processQueue($queue_name) {
         $success = 0;
         $error = 0;
         
-        $transport = new \Zend\Mail\Transport\Smtp();
+        $transport = new Smtp();
         if ($this->config['smtp'])
             $transport->setOptions(new SmtpOptions($this->config['smtp']));
         
         while ($mail = $this->table->getWaitingFromQueue($queue_name)) {
             $to = function() use ($mail) {
+                $result = array();
                 foreach ($mail->mail->getTo() as $tmp) {
-                    return $tmp->getEmail().'; ';
-                }                
+                    /**
+                     * @var $tmp \Zend\Mail\Address
+                     */
+                    $result[] = $tmp->getEmail();
+                }
+                return join('; ',$result);
             };
             try {
                 $transport->send($mail->mail);
                 $success++;
                 file_put_contents('php://stdout', 'Mail sent to: '.$to()."\n",FILE_APPEND);
+                $this->table->markAsSent($mail);
             }
             catch (\Exception $e) {
                 $error++;
@@ -65,8 +82,8 @@ class Service
             }
         }    
         
-        if ($success>0) file_put_contents('php://stdout', $success." mail sended.\n",FILE_APPEND);
-        if ($error>0) file_put_contents('php://stderr', $error." mails not sended.\n",FILE_APPEND);
+        if ($success>0) file_put_contents('php://stdout', "Sent mails: ".$success."\n",FILE_APPEND);
+        if ($error>0) file_put_contents('php://stderr', "Unsent mails: ".$error.".\n",FILE_APPEND);
     }
 }
 
