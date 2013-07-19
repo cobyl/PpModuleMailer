@@ -8,13 +8,13 @@
 
 namespace PpModuleMailer;
 
-use \Zend\Mail\AddressList;
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport;
-use \Zend\Mail\Transport\Smtp;
-use \Zend\Mail\Transport\SmtpOptions;
-
-use \PpModuleMailer\Model\MailerTable;
+use PpModuleMailer\Model\MailerTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Mail\Message;
+use Zend\Mail\Transport;
+use Zend\Mail\Transport\Smtp;
+use Zend\Mail\Transport\SmtpOptions;
 
 class Service
 {
@@ -23,11 +23,29 @@ class Service
      */
     protected $table;
 
+    /**
+     * @var \Zend\I18n\Translator\Translator
+     */
+    protected $translate = null;
+
+    /**
+     * @var array
+     */
     protected $config;
-    
-    public function __construct(MailerTable $table, $config) {
-        $this->table = $table;
-        $this->config = $config;
+
+    public function __construct(\Zend\ServiceManager\ServiceManager $sm)
+    {
+        $this->config = $sm->get('config')['PpModuleMailer'];
+
+        if ($sm->has('translator')) $this->translate = $sm->get('translator');
+
+        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+        $resultSetPrototype = new ResultSet();
+        $resultSetPrototype->setArrayObjectPrototype(new Model\Mailer());
+        $tableGateway = new TableGateway($this->config['table'], $dbAdapter, null, $resultSetPrototype);
+
+        //TODO inject config in more proper way?
+        $this->table = new Model\MailerTable($tableGateway, $this->config);
     }
     
     /**
@@ -37,11 +55,18 @@ class Service
     public function add($queue_name,\Zend\Mail\Message $mail) {
         $this->table->add($queue_name, $mail);
     }
-    
+
+    /**
+     * @param $queue_name
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param null $from
+     */
     public function addMail($queue_name,$to,$subject,$body,$from=null) {
         $mail = new \Zend\Mail\Message();
         $mail->setTo($to);
-        $mail->setSubject($subject);
+        $mail->setSubject(($this->translate ? $this->translate->translate($subject) : $subject));
         $mail->setBody($body);
         if ($from) $mail->setFrom($from);
         else $mail->setFrom($this->config['default_from']);
