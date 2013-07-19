@@ -8,12 +8,11 @@
 
 namespace PpModuleMailer;
 
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Console\Console;
 use Zend\Console\Adapter\AdapterInterface;
-use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\Console\Console;
+use Zend\Db\ResultSet\ResultSet;
 use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 
 /**
  * PpModuleMailer Module
@@ -46,15 +45,8 @@ class Module implements ConsoleUsageProviderInterface
         
         return array(
             'factories' => array(
-                'PpModuleMailer' =>  function($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Model\Mailer());
-                    $tableGateway =  new TableGateway($this->getConfig()['PpModuleMailer']['table'], $dbAdapter, null, $resultSetPrototype);
-                    
-                    //TODO inject config in more proper way?
-                    $table = new Model\MailerTable($tableGateway,$this->getConfig()['PpModuleMailer']);                    
-                    return new Service($table,$this->getConfig()['PpModuleMailer']);
+                'PpModuleMailer' => function (\Zend\ServiceManager\ServiceManager $sm) {
+                    return new Service($sm);
                 }
         ));
     }
