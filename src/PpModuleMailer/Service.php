@@ -57,10 +57,10 @@ class Service
     }
 
     /**
-     * @param $queue_name
-     * @param $to
-     * @param $subject
-     * @param $body
+     * @param string $queue_name
+     * @param string $to
+     * @param string $subject
+     * @param string $body
      * @param null $from
      */
     public function addMail($queue_name,$to,$subject,$body,$from=null) {
@@ -96,6 +96,7 @@ class Service
                 return join('; ',$result);
             };
             try {
+                //TODO process each To: separately
                 $transport->send($mail->mail);
                 $success++;
                 file_put_contents('php://stdout', 'Mail sent to: '.$to()."\n",FILE_APPEND);
@@ -103,6 +104,8 @@ class Service
             }
             catch (\Exception $e) {
                 $error++;
+                $this->table->markAsWaiting($mail);
+
                 file_put_contents('php://stderr', 'Error while sending e-mail to: '.$to()."\n",FILE_APPEND);
             }
         }    

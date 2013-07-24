@@ -17,7 +17,9 @@ class ConsoleController extends AbstractActionController
     {
         $queue = $this->getRequest()->getParam('queue');
         file_put_contents('php://stdout', 'Processing queue '.$queue.".\n",FILE_APPEND);
-        
+
+        /** @var \PpModuleMailer\Service $mailer */
+
         $mailer = $this->getServiceLocator()->get('PpModuleMailer');
         $mailer->processQueue($queue);
     }

@@ -8,13 +8,11 @@
 
 namespace PpModuleMailer\Model;
 
-use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\AbstractTableGateway;
-
+use Zend\Db\TableGateway\TableGateway;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
-use Zend\Db\Sql\Sql;
 
 class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInterface
 {
@@ -65,7 +63,16 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
     public function markAsSent(\PpModuleMailer\Model\Mailer $mail) {
         $this->tableGateway->update(array("status"=>"sent"),array('id'=>$mail->id));
     }
-    
+
+    /**
+     * @param \PpModuleMailer\Model\Mailer $mail
+     */
+    public function markAsWaiting(\PpModuleMailer\Model\Mailer $mail)
+    {
+        $this->tableGateway->update(array("status" => "waiting"), array('id' => $mail->id));
+    }
+
+
     /**
      * @param string $queue_name
      * @return \PpModuleMailer\Model\Mailer|boolean return \PpModuleMailer\Model\Mailer or false if queue is empty
