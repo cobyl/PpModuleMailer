@@ -59,7 +59,7 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
      */
     public function markAsError(\PpModuleMailer\Model\Mailer $mail)
     {
-        $this->tableGateway->update(array("status"=>"sent"),array('id'=>$mail->id));
+        $this->tableGateway->update(array("status" => "error"), array('id' => $mail->id));
     }
 
     /**
