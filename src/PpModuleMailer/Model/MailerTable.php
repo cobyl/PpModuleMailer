@@ -40,13 +40,10 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
         $this->tableGateway = $tableGateway;
         $this->config = $config;
     }
-    
+
     /**
      * @param string $queue_name
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     * @param string $from
+     * @param \Zend\Mail\Message $mail
      */
     public function add($queue_name,\Zend\Mail\Message $mail) {
         $this->tableGateway->insert(
@@ -89,13 +86,14 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
             $select->from($this->config['table']);
             $select->where(array('status'=>'waiting','queue_name'=>$queue_name));
             $select->order('created');
-            //TODO why not working?
-            // $select->limit(1);
+            //TODO add LIMIT 1
             $resultset = $connection->execute($select->getSqlString($this->tableGateway->adapter->getPlatform()));
             $mailer = $resultset->current(); 
             
             //Queue is empty
             if (!$mailer) {
+                $connection->commit();
+                $connection->execute('SET AUTOCOMMIT = 1');
                 return false;
             }
             
@@ -110,11 +108,10 @@ class MailerTable extends AbstractTableGateway implements ServiceLocatorAwareInt
             $mailerObj->exchangeArray($mailer);
             $mailerObj->status ='processing';
             return $mailerObj;
-        } 	
-        catch (\Exception $e) {            
+        } catch (\Exception $e) {
+            $connection = $this->tableGateway->adapter->getDriver()->getConnection();
             $connection->rollback();
             $connection->execute('SET AUTOCOMMIT = 1');
-            $connection = $this->tableGateway->adapter->getDriver()->getConnection();
             throw new \Exception($e->getMessage());
         }       
     }

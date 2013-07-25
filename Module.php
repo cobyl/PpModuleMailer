@@ -9,10 +9,9 @@
 namespace PpModuleMailer;
 
 use Zend\Console\Adapter\AdapterInterface;
-use Zend\Console\Console;
 use Zend\Db\ResultSet\ResultSet;
-use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * PpModuleMailer Module
@@ -42,10 +41,9 @@ class Module implements ConsoleUsageProviderInterface
     
     public function getServiceConfig()
     {
-        
         return array(
             'factories' => array(
-                'PpModuleMailer' => function (\Zend\ServiceManager\ServiceManager $sm) {
+                'PpModuleMailer' => function (ServiceManager $sm) {
                     return new Service($sm);
                 }
         ));
@@ -66,24 +64,5 @@ class Module implements ConsoleUsageProviderInterface
             ),
         );
     }
-    
-    /**
-     * Listen to the bootstrap event
-     *
-     * @param \Zend\EventManager\EventInterface $e
-     * @return array
-     */
-    public function onBootstrap(EventInterface $e)
-    {
-        /** @var $e \Zend\Mvc\MvcEvent */
-        $app = $e->getApplication();
-        $em = $app->getEventManager();
-        $sm = $app->getServiceManager();
 
-        // Listener have only sense when request is via http.
-        if (!Console::isConsole()) {
-            $em->attach($sm->get('AsseticBundle\Listener'));
-        }
-    }
-    
 }

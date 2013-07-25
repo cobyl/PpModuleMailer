@@ -104,8 +104,7 @@ class Service
             }
             catch (\Exception $e) {
                 $error++;
-                $this->table->markAsWaiting($mail);
-
+                $this->markAsWaiting($mail);
                 file_put_contents('php://stderr', 'Error while sending e-mail to: '.$to()."\n",FILE_APPEND);
             }
         }    
