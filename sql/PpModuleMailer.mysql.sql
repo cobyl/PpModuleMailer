@@ -4,6 +4,6 @@ CREATE TABLE mailer (
   queue_name CHAR(16)                              NOT NULL,
   mail       TEXT                                  NOT NULL,
   created    TIMESTAMP DEFAULT now()               NOT NULL,
-  status ENUM('waiting', 'processing', 'sent') NOT NULL DEFAULT 'waiting'
+  status ENUM('waiting', 'processing', 'sent', 'error') NOT NULL DEFAULT 'waiting'
 );
 
