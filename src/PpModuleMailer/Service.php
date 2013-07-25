@@ -52,8 +52,10 @@ class Service
      * @param string $queue_name
      * @param \Zend\Mail\Message $mail
      */
-    public function add($queue_name,\Zend\Mail\Message $mail) {
-        $this->table->add($queue_name, $mail);
+    public function add($queue_name, \Zend\Mail\Message $message)
+    {
+        if (!$message->getFrom()) $message->addFrom($this->config['default_from']);
+        $this->table->add($queue_name, $message);
     }
 
     /**
@@ -64,13 +66,14 @@ class Service
      * @param null $from
      */
     public function addMail($queue_name,$to,$subject,$body,$from=null) {
-        $mail = new \Zend\Mail\Message();
-        $mail->setTo($to);
-        $mail->setSubject(($this->translate ? $this->translate->translate($subject) : $subject));
-        $mail->setBody($body);
-        if ($from) $mail->setFrom($from);
-        else $mail->setFrom($this->config['default_from']);
-        $this->table->add($queue_name, $mail);
+        $message = new \Zend\Mail\Message();
+        $message->setTo($to);
+        $message->setSubject(($this->translate ? $this->translate->translate($subject) : $subject));
+        $message->setBody($body);
+        $message->setEncoding("UTF-8");
+        if ($from) $message->setFrom($from);
+        else $message->setFrom($this->config['default_from']);
+        $this->table->add($queue_name, $message);
     }
  
     /**
