@@ -84,7 +84,7 @@ class Service
         $error = 0;
         
         $transport = new Smtp();
-        if ($this->config['smtp'])
+        if (isset($this->config['smtp']))
             $transport->setOptions(new SmtpOptions($this->config['smtp']));
         
         while ($mail = $this->table->getWaitingFromQueue($queue_name)) {
