@@ -54,7 +54,7 @@ class Service
      */
     public function add($queue_name, \Zend\Mail\Message $message)
     {
-        if (!$message->getFrom()) $message->addFrom($this->config['default_from']);
+        if (!count($message->getFrom())) $message->addFrom($this->config['default_from']);
         $this->table->add($queue_name, $message);
     }
 
