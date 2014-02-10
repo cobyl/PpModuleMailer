@@ -48,6 +48,10 @@ Installation
 Please check sql/PpModuleMailer.mysql.sql. This module needs database with 
 enabled transactions. 
 
+3. Copy ppmodulemailer.global.php.dist to config/autoload/ppmodulemailer.global.php
+
+Make any required changes to your configuration.
+
 # How to use _PpModuleMailer_
 
 1. Adding mail to queue "registration" from controller:

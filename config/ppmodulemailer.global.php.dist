@@ -1,0 +1,31 @@
+<?php
+/**
+ * PpModuleMailer Configuration
+ *
+ * If you have a ./config/autoload/ directory set up for your project, you can
+ * drop this config file in it and change the values as you wish.
+ */
+$settings = array(
+
+    'table'=>'mailer',
+
+    'default_from'=>'default@domain.com',
+
+    'smtp' => array(
+        'host'              => 'smtp.gmail.com',
+        'connection_class'  => 'login',
+        'connection_config' => array(
+            'ssl'       => 'tls',
+            'username' => 'SOMEEMAIL@gmail.com',
+            'password' => 'SOMEPASSWORD'
+        ),
+        'port' => 587,
+    ),
+);
+
+/**
+ * You do not need to edit below this line
+ */
+return array(
+    'PpModuleMailer' => $settings,
+);
