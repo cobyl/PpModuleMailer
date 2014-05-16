@@ -64,12 +64,23 @@ class Service
      * @param string $subject
      * @param string $body
      * @param null $from
+     * @param true $html
      */
-    public function addMail($queue_name,$to,$subject,$body,$from=null) {
+    public function addMail($queue_name,$to,$subject,$body,$from=null,$html=true) {
         $message = new \Zend\Mail\Message();
         $message->setTo($to);
         $message->setSubject(($this->translate ? $this->translate->translate($subject) : $subject));
-        $message->setBody($body);
+
+        if($html){
+            $bodyPart = new \Zend\Mime\Message();
+            $bodyMessage = new \Zend\Mime\Part($body);
+            $bodyMessage->type = 'text/html';
+            $bodyPart->setParts(array($bodyMessage));
+            $message->setBody($bodyPart);
+        } else {
+            $message->setBody($body);
+        }
+
         $message->setEncoding("UTF-8");
         if ($from) $message->setFrom($from);
         else $message->setFrom($this->config['default_from']);
