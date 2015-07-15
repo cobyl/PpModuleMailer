@@ -20,9 +20,6 @@
     "autoload": {
         "psr-0": {
             "PpModuleMailer": "src/"
-        },
-        "classmap": [
-            "./Module.php"
-        ]
+        }
     }
 }
